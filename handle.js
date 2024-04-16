@@ -12,7 +12,18 @@ if(url === '/'){
     return res.end();
 }
 if(url === '/message' && method === 'POST'){
-    fs.writeFileSync('myMsg.text','my test data');
+    const body = [];
+    req.on('data',(chunk) =>{
+        console.log(chunk);
+     body.push(chunk);
+    });
+    req.on('end',() =>{
+       const parsedBody =  Buffer.concat(body).toString();
+       console.log(parsedBody);
+       const message = parsedBody.split('=')[1];
+       fs.writeFileSync('myMsg.text',message);
+    })
+   
     res.statusCode = 302;
     res.setHeader('Location','/');
     return res.end();
@@ -24,4 +35,4 @@ res.write('<body><h1>Hello From Node JS!</h1></body>')
 res.write('</html>')
 res.end();
 })
-server.listen(3001);
+server.listen(3005);
