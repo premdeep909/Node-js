@@ -17,16 +17,17 @@ if(url === '/message' && method === 'POST'){
         console.log(chunk);
      body.push(chunk);
     });
-    req.on('end',() =>{
+   return req.on('end',() =>{
        const parsedBody =  Buffer.concat(body).toString();
        console.log(parsedBody);
        const message = parsedBody.split('=')[1];
        fs.writeFileSync('myMsg.text',message);
-    })
-   
-    res.statusCode = 302;
+       res.statusCode = 302;
     res.setHeader('Location','/');
     return res.end();
+    })
+    
+    
 }
 res.setHeader('Content-Type' ,'text/html');
 res.write('<html>')
